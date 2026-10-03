@@ -1,0 +1,31 @@
+name: SQL validation
+
+on:
+  push:
+    paths:
+      - 'analytics/sql/**'
+      - '.sqlfluff'
+      - '.github/workflows/sql-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sqlfluff:
+    runs-on: ubuntu-latest
+    env:
+      SQL_DIALECT: ${{ vars.SQL_DIALECT || 'tsql' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install sqlfluff
+      - name: Lint SQL files
+        run: |
+          if find analytics/sql -type f -name '*.sql' -print -quit | grep -q .; then
+            sqlfluff lint analytics/sql --dialect "$SQL_DIALECT"
+          else
+            echo "No SQL files to lint yet."
+          fi

@@ -1,0 +1,1 @@
+Store the Power BI semantic model here as Tabular Editor `model.bim` JSON or TMDL files. Static checks validate model artifacts and compare model object names with PBIR visual definitions; review unused-object candidates before removal.

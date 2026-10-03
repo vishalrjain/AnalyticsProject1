@@ -1,0 +1,27 @@
+parameters:
+  - name: environment
+    type: string
+    default: dev
+    values:
+      - dev
+      - test
+      - prod
+
+variables:
+  - name: targetEnvironment
+    value: ${{ parameters.environment }}
+  - ${{ if eq(parameters.environment, 'dev') }}:
+      - name: azureServiceConnection
+        value: $(DEV_SERVICE_CONNECTION)
+      - name: dataFactoryName
+        value: $(DEV_DATA_FACTORY_NAME)
+  - ${{ if eq(parameters.environment, 'test') }}:
+      - name: azureServiceConnection
+        value: $(TEST_SERVICE_CONNECTION)
+      - name: dataFactoryName
+        value: $(TEST_DATA_FACTORY_NAME)
+  - ${{ if eq(parameters.environment, 'prod') }}:
+      - name: azureServiceConnection
+        value: $(PROD_SERVICE_CONNECTION)
+      - name: dataFactoryName
+        value: $(PROD_DATA_FACTORY_NAME)

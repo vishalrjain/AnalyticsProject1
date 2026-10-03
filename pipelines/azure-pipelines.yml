@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - pipelines/**
+      - config/**
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - pipelines/**
+      - config/**
+
+parameters:
+  - name: environment
+    displayName: Deployment environment
+    type: string
+    default: dev
+    values:
+      - dev
+      - test
+      - prod
+
+variables:
+  - template: environments.yml
+    parameters:
+      environment: ${{ parameters.environment }}
+
+stages:
+  - stage: Validate
+    jobs:
+      - job: ValidateConfiguration
+        steps:
+          - script: echo "Validating $(targetEnvironment) deployment configuration for $(dataFactoryName)"
+            displayName: Validate selected environment
+
+# Add environment-specific deployment stages/templates after validation is configured.
